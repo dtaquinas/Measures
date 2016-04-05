@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <boost/multiprecision/mpfr.hpp>
+//#include <boost/multiprecision/mpfr.hpp>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <boost/math/special_functions/bessel.hpp>
 #define PREC 300    //change this to set precision
@@ -32,11 +32,14 @@ big_float jac_diag( big_float a, big_float b, big_float c )
   return (1 - b)*a - (1 + b)*c;
 }
 
-int compute_verb ( std::vector<big_float > &verblunsky, big_float lambda )
+int compute_verb ( std::vector<big_float > &verblunsky, big_float lambda, bool use_bessel, double init )
 {
   std::cout << "Computing verblunsky coefficients: initializing..." << std::endl;
   big_float coeff = -1*(2 / lambda);
-  verblunsky[0] = initval( lambda );
+  if (use_bessel)
+    verblunsky[0] = initval( lambda );
+  else
+    verblunsky[0] = init;
   verblunsky[1] = dpii_iter( verblunsky[0], (big_float) -1, coeff, coeff, (big_float) 0, 0 );
   int kmax = verblunsky.size() - 1;
   std::cout << "Computing verblunsky coefficients: iterating..." << std::endl;
@@ -48,7 +51,7 @@ int compute_verb ( std::vector<big_float > &verblunsky, big_float lambda )
   return 0;
 }
 
-int compute_jac ( std::vector<big_float > &diag, std::vector<big_float > &offdiag, std::vector<big_float > &verblunsky )
+int compute_jac ( std::vector<big_float > &diag, std::vector<big_float > &offdiag, const std::vector<big_float > & verblunsky )
 {
   std::cout << "Computing jacobi coefficients: initializing..." << std::endl;
   int kmax = offdiag.size() - 1;
@@ -82,7 +85,7 @@ int writeout_csv( std::string fname, int out_digits, std::vector<big_float> verb
   return 0;
 }
 
-int get_input( int &digits, int &terms, double &lambda, std::string &fname )
+int get_input( int &digits, int &terms, double &lambda, std::string &fname, double &init_val, bool &use_bessel )
 {
   std::string s;
   while (true) 
@@ -112,6 +115,34 @@ int get_input( int &digits, int &terms, double &lambda, std::string &fname )
       break;
     std::cout << "Input should be a float: " << std::endl;
   }
+  while (true) 
+  {
+    std::cout << "Use mod bessel initial condition? (y/n) " << std::endl;
+    std::getline(std::cin, s);
+    if (s == "y")
+    {
+      use_bessel = true;
+      break;
+    }
+    if (s == "n")
+    {
+      use_bessel = false;
+      break;
+    }
+    std::cout << "Input should be (y/n) " << std::endl;
+  }
+  if (!use_bessel)
+  {
+    while (true) 
+    {
+      std::cout << "Enter alternative initial value: " << std::endl;
+      std::getline(std::cin, s);
+      std::stringstream instr(s);
+      if (instr >> init_val)
+        break;
+      std::cout << "Input should be a float: " << std::endl;
+    }
+  }
   std::cout << "Enter output filename: " << std::endl;
   std::getline(std::cin, fname);
 }
@@ -123,8 +154,10 @@ int main(int argc, char *argv[])
   int terms;
   double lambda_in;
   std::string fname;
+  bool use_bessel;
+  double init_val;
 
-  get_input( digits, terms, lambda_in, fname );
+  get_input( digits, terms, lambda_in, fname, init_val, use_bessel );
 //  big_float::default_precision(digits);
   big_float lambda(lambda_in);
 
@@ -133,7 +166,7 @@ int main(int argc, char *argv[])
   std::vector<big_float > diag(jterms);
   std::vector<big_float > offdiag(jterms); 
 
-  compute_verb (verblunsky, lambda);
+  compute_verb (verblunsky, lambda, use_bessel, init_val );
   compute_jac (diag, offdiag, verblunsky);
   writeout_csv( fname, digits, verblunsky, diag, offdiag );
   return 0;
