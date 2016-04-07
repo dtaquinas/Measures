@@ -37,7 +37,10 @@ class Polynomial<coeff_t> {
 template<typename coeff_t>
 Polynomial<coeff_t>& operator=(const Polynomial<coeff_t> &rhs)
 {
-
+  if(this == &rhs)
+    return *this;
+  
+  
 }
 
 
