@@ -1,5 +1,5 @@
 template<typename coeff_t>
-class Polynomial {
+class Polynomial<coeff_t> {
   private:
   std::vector<coeff_t> coefficients;
   public:
@@ -15,6 +15,11 @@ class Polynomial {
     return result;
   }
   coeff_t roots();
+  int set_coeffs( std::vector<coeff_t> coef );
+  Polynomial<coeff_t>& operator=(const Polynomial<coeff_t> &rhs);
+  Polynomial<coeff_t> operator+(const Polynomial<coeff_t> &p1, const Polynomial<coeff_t> &p2);
+  Polynomial<coeff_t> operator*(const Polynomial<coeff_t> &p1, const Polynomial<coeff_t> &p2);
+  Polynomial<coeff_t> operator*(coeff_t scalar, const Polynomial<coeff_t> &p);
 };
 
 
