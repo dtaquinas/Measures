@@ -1,4 +1,4 @@
-template<typename coeff_t>
+template<class coeff_t>
 class Polynomial<coeff_t> {
   private:
   std::vector<coeff_t> coeff;
@@ -34,15 +34,14 @@ class Polynomial<coeff_t> {
   
 };
 
-template<typename coeff_t>
+template<class coeff_t>
 Polynomial<coeff_t>& operator=(const Polynomial<coeff_t> &rhs)
 {
   if(this == &rhs)
     return *this;
-  
-  
+  coeff.resize(rhs.size());
+  set_coeffs(rhs); 
 }
-
 
 // Type-specific stuff: constructors and (some) arithmetic
 // Constructors need to be type-specific because there are different types of zeros, and this ain't Julia
@@ -61,5 +60,9 @@ Polynomial<complex<double> >::Polynomial()
 {
   coeff = std::vector<complex<double >>{0.};
 }
+
+template<class coeff_t>
+Polynomial<coeff_t> operator+
+
 
 
