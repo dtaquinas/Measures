@@ -62,21 +62,33 @@ Polynomial<complex<double> >::Polynomial()
 }
 
 template<class coeff_t>
-Polynomial<coeff_t> operator+=(
+Polynomial<coeff_t> operator+=( )
+{
 
+}
 template<class coeff_t>
 Polynomial<coeff_t> operator-=
+{
 
+}
 template<class coeff_t>
 Polynomial<coeff_t> operator*=
+{
 
+}
 template<class coeff_t>
 Polynomial<coeff_t> operator+
+{
 
+}
 template<class coeff_t>
 Polynomial<coeff_t> operator-
+{
 
+}
 template<class coeff_t>
 Polynomial<coeff_t> operator*
+{
 
+}
 
