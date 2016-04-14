@@ -28,9 +28,14 @@ class Polynomial<coeff_t> {
   }
   long degree() {return coeff.size()}
   Polynomial<coeff_t>& operator=(const Polynomial<coeff_t> &rhs);
-  Polynomial<coeff_t> operator+(const Polynomial<coeff_t> &p1, const Polynomial<coeff_t> &p2);
-  Polynomial<coeff_t> operator*(const Polynomial<coeff_t> &p1, const Polynomial<coeff_t> &p2);
-  Polynomial<coeff_t> operator*(coeff_t scalar, const Polynomial<coeff_t> &p);
+  Polynomial<coeff_t> operator+(const Polynomial<coeff_t> &other);
+  Polynomial<coeff_t> operator*(const Polynomial<coeff_t> &other);
+  Polynomial<coeff_t> operator-(const Polynomial<coeff_t> &other);
+  Polynomial<coeff_t> operator+=(const Polynomial<coeff_t> &other);
+  Polynomial<coeff_t> operator*=(const Polynomial<coeff_t> &other);
+  //Polynomial<coeff_t> operator*=(const coeff_t &scalar);
+  Polynomial<coeff_t> operator-=(const Polynomial<coeff_t> &other);
+  //Polynomial<coeff_t> operator*(const coeff_t &scalar);
   
 };
 
@@ -62,33 +67,74 @@ Polynomial<complex<double> >::Polynomial()
 }
 
 template<class coeff_t>
-Polynomial<coeff_t> operator+=( )
+Polynomial<coeff_t> & Polynomial<coeff_t>::operator+=( const Polynomial<coeff_t> &rhs )
 {
-
+  if (rhs.degree() > degree())
+  {
+    coeff.resize(rhs.degree());
+  }
+  for (int i = 0; i <= rhs.degree(); i++)
+  {
+    coeff[i] += rhs.coeff[i];
+  }
+  return *this;
 }
-template<class coeff_t>
-Polynomial<coeff_t> operator-=
-{
 
+template<class coeff_t>
+Polynomial<coeff_t> & Polynomial<coeff_t>::operator-=( const Polynomial<coeff_t> &rhs )
+{
+if (rhs.degree() > degree())
+  { 
+    coeff.resize(rhs.degree());
+  } 
+  for (int i = 0; i <= rhs.degree(); i++)
+  {
+    coeff[i] -= rhs.coeff[i];
+  }  
+  return *this;
 }
-template<class coeff_t>
-Polynomial<coeff_t> operator*=
-{
 
+template<class coeff_t>
+Polynomial<coeff_t> & Polynomial<coeff_t>::operator*=( const Polynomial<coeff_t> &rhs )
+{
+  long new_degree = degree() + rhs.degree();
+  coeff.resize(new_degree);
+  std::vector<coeff_t> tempc(new_degree);
+  int i;
+  int j;
+  for (i = 0; i <= new_degree; i++)
+  {
+    for (j = 0; j <= i; j++)
+    {
+      if (j <= degree() && (i - j) <= rhs.degree())
+        tempc[i] += coeff[j] * rhs.coeff[i - j];
+    }
+  }
+  set_coeffs(tempc);
+  return *this;
 }
-template<class coeff_t>
-Polynomial<coeff_t> operator+
-{
 
+template<class coeff_t>
+Polynomial<coeff_t> Polynomial<coeff_t>::operator+(const Polynomial<coeff_t> &rhs)
+{
+  Polynomial<coeff_t> result = *this;
+  result += rhs;
+  return result;
 }
-template<class coeff_t>
-Polynomial<coeff_t> operator-
-{
 
+template<class coeff_t>
+Polynomial<coeff_t> Polynomial<coeff_t>::operator-
+{
+  Polynomial<coeff_t> result = *this;
+  result -= rhs;
+  return result;
 }
-template<class coeff_t>
-Polynomial<coeff_t> operator*
-{
 
+template<class coeff_t>
+Polynomial<coeff_t> Polynomial<coeff_t>::operator*
+{
+  Polynomial<coeff_t> result = *this;
+  result *= rhs;
+  return result;
 }
 

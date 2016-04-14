@@ -28,4 +28,4 @@
 *.app
 
 # vim swap files
-# *.swp
+*.swp
