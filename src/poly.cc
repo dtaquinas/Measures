@@ -1,3 +1,5 @@
+#include <eigen3/Eigen/Core>
+
 template<class coeff_t>
 class Polynomial<coeff_t> {
   private:
