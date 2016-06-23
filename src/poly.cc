@@ -132,27 +132,8 @@ class Polynomial {
     return result;
   }
 
-  //Polynomial<coeff_t> operator+(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator*(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator-(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator+=(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator*=(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator*=(const coeff_t &scalar);
-  //Polynomial<coeff_t> operator-=(const Polynomial<coeff_t> &other);
-  //Polynomial<coeff_t> operator*(const coeff_t &scalar);
 
 };
-
-/*
-template<typename coeff_t>
-Polynomial<coeff_t>& operator=(const Polynomial<coeff_t> &rhs)
-{
-  if(this == &rhs)
-    return *this;
-  coeff.resize(rhs.size());
-  set_coeffs(rhs);
-}
-*/
 
 template<>
 Polynomial<double>::Polynomial()
@@ -160,20 +141,22 @@ Polynomial<double>::Polynomial()
   coeff = std::vector<double>{0.};
 }
 
-/*
-int main()
+template<>
+Polynomial<complex>::Polynomial()
 {
-  Polynomial<double> p;
-  Polynomial<double> q;
-  Polynomial<double> r;
-  std::vector<double> v{3., 4., 5.};
-  p.set_coeffs(v);
-  
-  std::cout << p.degree() << std::endl;
-  std::cout << p(7.5) << std::endl;
-  q = p;
-  r = p * q;
-  std::cout << r.degree() << std::endl;
-  std::cout << r(3.) << std::endl;
+  coeff = std::vector<complex>{0.};
 }
-*/
+
+template<>
+Polynomial<complex> conj(const Polynomial<complex> &p)
+{
+  Polynomial<complex> q;
+  std::vector<complex> qc;
+  typename std::vector<complex>::iterator it = p.coeff.begin();
+  for (; it != coeff.end(); ++it)
+  {
+    qc.push_back(*it);
+  }
+  return q;
+}
+
